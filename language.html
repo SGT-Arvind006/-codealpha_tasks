@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Language Translation Tool</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{
+            background: linear-gradient(135deg,#4facfe,#00f2fe);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .translator-card{
+            width:650px;
+            background:white;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        textarea{
+            resize:none;
+        }
+
+        .title{
+            text-align:center;
+            font-weight:bold;
+            margin-bottom:20px;
+        }
+
+        #output{
+            min-height:120px;
+            background:#f8f9fa;
+            border:1px solid #ddd;
+            border-radius:10px;
+            padding:15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="translator-card">
+
+    <h2 class="title">
+        🌍 AI Language Translation Tool
+    </h2>
+
+    <div class="mb-3">
+        <label class="form-label">Enter Text</label>
+        <textarea id="inputText"
+                  class="form-control"
+                  rows="5"
+                  placeholder="Type text here..."></textarea>
+    </div>
+
+    <div class="row mb-3">
+
+        <div class="col-md-6">
+            <label class="form-label">Source Language</label>
+            <select id="sourceLang" class="form-select">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="fr">French</option>
+                <option value="es">Spanish</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Target Language</label>
+            <select id="targetLang" class="form-select">
+                <option value="hi">Hindi</option>
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="es">Spanish</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="d-grid mb-3">
+        <button class="btn btn-primary"
+                onclick="translateText()">
+            Translate
+        </button>
+    </div>
+
+    <h5>Translated Text</h5>
+
+    <div id="output">
+        Translation will appear here...
+    </div>
+
+    <button class="btn btn-success mt-3"
+            onclick="copyText()">
+        Copy Translation
+    </button>
+
+</div>
+
+<script>
+
+async function translateText(){
+
+    let text =
+        document.getElementById("inputText").value;
+
+    let source =
+        document.getElementById("sourceLang").value;
+
+    let target =
+        document.getElementById("targetLang").value;
+
+    let response = await fetch(
+    `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`
+    );
+
+    let data = await response.json();
+
+    document.getElementById("output").innerText =
+    data.responseData.translatedText;
+}
+
+function copyText(){
+
+    let text =
+    document.getElementById("output").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Translation copied!");
+}
+
+</script>
+
+</body>
+</html>
